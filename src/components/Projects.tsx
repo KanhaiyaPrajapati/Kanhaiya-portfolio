@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { HiExternalLink, HiCode } from "react-icons/hi";
+import { HiExternalLink, HiCode, HiArrowRight } from "react-icons/hi";
 import { FaGithub } from "react-icons/fa";
 import SectionHeading from "./SectionHeading";
 import { projects } from "@/lib/data";
@@ -12,7 +12,6 @@ const categories = ["All", ...Array.from(new Set(projects.map((p) => p.category)
 
 export default function Projects() {
   const [filter, setFilter] = useState("All");
-  const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   const filtered = filter === "All" ? projects : projects.filter((p) => p.category === filter);
 
@@ -29,14 +28,14 @@ export default function Projects() {
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="flex flex-wrap justify-center gap-2 mb-12"
+          className="flex flex-wrap justify-center gap-2 mb-16"
         >
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setFilter(cat)}
               className={cn(
-                "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300",
+                "px-5 py-2.5 rounded-full text-sm font-medium transition-all duration-300",
                 filter === cat
                   ? "bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-lg shadow-primary-500/25"
                   : "bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10"
@@ -47,114 +46,158 @@ export default function Projects() {
           ))}
         </motion.div>
 
-        {/* Project grid */}
-        <motion.div layout className="grid md:grid-cols-2 gap-6 lg:gap-8">
+        {/* Project list — full width alternating cards */}
+        <div className="flex flex-col gap-20 lg:gap-28">
           <AnimatePresence mode="popLayout">
-            {filtered.map((project, index) => (
-              <motion.div
-                key={project.title}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ duration: 0.4, delay: index * 0.1 }}
-                onMouseEnter={() => setHoveredId(index)}
-                onMouseLeave={() => setHoveredId(null)}
-                className="group glass-card overflow-hidden hover:shadow-2xl hover:shadow-primary-500/10 transition-all duration-500"
-              >
-                {/* Project Image / Placeholder */}
-                <div className="relative h-48 md:h-56 bg-gradient-to-br from-primary-500/10 via-accent-500/10 to-primary-400/10 dark:from-primary-500/5 dark:via-accent-500/5 dark:to-primary-400/5 overflow-hidden">
-                  {/* Abstract pattern */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="grid grid-cols-3 gap-3 opacity-20 dark:opacity-10">
-                      {[0.65, 0.9, 0.45, 0.8, 0.5, 0.95, 0.7, 0.55, 0.85].map((opacity, i) => (
-                        <div
-                          key={i}
-                          className="w-8 h-8 rounded-lg bg-primary-500"
-                          style={{
-                            opacity,
-                            transform: `rotate(${i * 5}deg)`,
-                          }}
-                        />
-                      ))}
-                    </div>
-                  </div>
+            {filtered.map((project, index) => {
+              const isEven = index % 2 === 0;
+              const projectNum = String(index + 1).padStart(2, "0");
 
-                  {/* Project icon & category */}
-                  <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-                    <div className="w-16 h-16 rounded-2xl bg-white/80 dark:bg-dark/80 backdrop-blur-sm flex items-center justify-center shadow-xl mb-3">
-                      <HiCode className="w-8 h-8 text-primary-500" />
-                    </div>
-                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-white/80 dark:bg-dark/80 backdrop-blur-sm text-primary-600 dark:text-primary-400">
-                      {project.category}
-                    </span>
-                  </div>
-
-                  {/* Hover overlay */}
-                  <motion.div
-                    initial={false}
-                    animate={{ opacity: hoveredId === index ? 1 : 0 }}
-                    className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/50 to-transparent flex items-end justify-center pb-6 gap-4 z-20"
+              return (
+                <motion.div
+                  key={project.title}
+                  layout
+                  initial={{ opacity: 0, y: 60 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 40 }}
+                  viewport={{ once: true, margin: "-80px" }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  className="group"
+                >
+                  <div
+                    className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-14 items-center"
                   >
-                    <a
-                      href={project.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2 rounded-lg bg-white/20 backdrop-blur-sm text-white text-sm font-medium hover:bg-white/30 transition-colors flex items-center gap-2"
-                    >
-                      <FaGithub className="w-4 h-4" />
-                      Code
-                    </a>
-                    <a
-                      href={project.live}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="px-4 py-2 rounded-lg bg-primary-500/80 backdrop-blur-sm text-white text-sm font-medium hover:bg-primary-500 transition-colors flex items-center gap-2"
-                    >
-                      <HiExternalLink className="w-4 h-4" />
-                      Demo
-                    </a>
-                  </motion.div>
-                </div>
+                    {/* Visual / Image side */}
+                    <div className={cn("order-1", !isEven && "lg:order-2")}>
+                      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-primary-500/10 via-accent-500/5 to-primary-400/10 dark:from-primary-500/5 dark:via-accent-500/[0.03] dark:to-primary-400/5 border border-gray-200/40 dark:border-white/5 aspect-[16/10] group-hover:shadow-2xl group-hover:shadow-primary-500/10 transition-all duration-700">
+                        {/* Grid dots pattern */}
+                        <div className="absolute inset-0 opacity-[0.04] dark:opacity-[0.06]">
+                          <div
+                            className="w-full h-full"
+                            style={{
+                              backgroundImage:
+                                "radial-gradient(circle, #6366f1 1px, transparent 1px)",
+                              backgroundSize: "24px 24px",
+                            }}
+                          />
+                        </div>
 
-                {/* Content */}
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                    {project.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
-                    {project.description}
-                  </p>
+                        {/* Center content */}
+                        <div className="absolute inset-0 flex flex-col items-center justify-center z-10 p-8">
+                          <motion.div
+                            whileHover={{ scale: 1.05, rotate: 2 }}
+                            className="w-20 h-20 rounded-2xl bg-white/80 dark:bg-dark/60 backdrop-blur-md flex items-center justify-center shadow-2xl shadow-primary-500/20 mb-5 border border-white/50 dark:border-white/10"
+                          >
+                            <HiCode className="w-9 h-9 text-primary-500" />
+                          </motion.div>
+                          <span className="px-4 py-1.5 rounded-full text-xs font-semibold bg-white/80 dark:bg-dark/60 backdrop-blur-md text-primary-600 dark:text-primary-400 border border-white/50 dark:border-white/10 tracking-wide uppercase">
+                            {project.category}
+                          </span>
+                        </div>
 
-                  {/* Features */}
-                  <ul className="space-y-1.5 mb-5">
-                    {project.features.slice(0, 3).map((feature) => (
-                      <li
-                        key={feature}
-                        className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400"
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full bg-primary-400 shrink-0" />
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
+                        {/* Gradient orbs */}
+                        <div className="absolute -top-20 -right-20 w-56 h-56 rounded-full bg-primary-500/15 dark:bg-primary-500/10 blur-3xl group-hover:bg-primary-500/25 transition-colors duration-700" />
+                        <div className="absolute -bottom-20 -left-20 w-56 h-56 rounded-full bg-accent-500/15 dark:bg-accent-500/10 blur-3xl group-hover:bg-accent-500/25 transition-colors duration-700" />
 
-                  {/* Tech stack */}
-                  <div className="flex flex-wrap gap-2">
-                    {project.tech.map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2.5 py-1 rounded-lg text-xs font-medium bg-gray-100 dark:bg-white/5 text-gray-600 dark:text-gray-400 border border-gray-200/50 dark:border-white/5"
-                      >
-                        {tech}
+                        {/* Hover overlay with links */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/40 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end justify-center pb-8 gap-4 z-20">
+                          <motion.a
+                            href={project.github}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="px-5 py-2.5 rounded-xl bg-white/15 backdrop-blur-md text-white text-sm font-medium hover:bg-white/25 transition-colors flex items-center gap-2 border border-white/10"
+                          >
+                            <FaGithub className="w-4 h-4" />
+                            Source Code
+                          </motion.a>
+                          <motion.a
+                            href={project.live}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="px-5 py-2.5 rounded-xl bg-primary-500/80 backdrop-blur-md text-white text-sm font-medium hover:bg-primary-500 transition-colors flex items-center gap-2"
+                          >
+                            <HiExternalLink className="w-4 h-4" />
+                            Live Demo
+                          </motion.a>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Content side */}
+                    <div className={cn("order-2", !isEven && "lg:order-1")}>
+                      {/* Project number */}
+                      <span className="text-7xl lg:text-8xl font-black text-gray-100 dark:text-white/[0.03] select-none leading-none block mb-4 -ml-1 tracking-tighter">
+                        {projectNum}
                       </span>
-                    ))}
+
+                      <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white mb-4 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors duration-300">
+                        {project.title}
+                      </h3>
+
+                      {/* Description card */}
+                      <div className="glass-card p-5 mb-6">
+                        <p className="text-gray-600 dark:text-gray-400 text-sm lg:text-base leading-relaxed">
+                          {project.longDescription || project.description}
+                        </p>
+                      </div>
+
+                      {/* Features */}
+                      <ul className="space-y-2.5 mb-7">
+                        {project.features.map((feature) => (
+                          <li
+                            key={feature}
+                            className="flex items-start gap-3 text-sm lg:text-[15px] text-gray-600 dark:text-gray-400"
+                          >
+                            <HiArrowRight className="w-4 h-4 text-primary-500 shrink-0 mt-0.5" />
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+
+                      {/* Tech stack */}
+                      <div className="flex flex-wrap gap-2 mb-7">
+                        {project.tech.map((tech) => (
+                          <span
+                            key={tech}
+                            className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary-50 dark:bg-primary-500/10 text-primary-600 dark:text-primary-400 border border-primary-200/50 dark:border-primary-500/15 tracking-wide"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Action links — mobile visible */}
+                      <div className="flex items-center gap-4 lg:hidden">
+                        <a
+                          href={project.github}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-primary-500 dark:hover:text-primary-400 transition-colors"
+                        >
+                          <FaGithub className="w-4 h-4" />
+                          Source Code
+                        </a>
+                        <a
+                          href={project.live}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-500 transition-colors"
+                        >
+                          <HiExternalLink className="w-4 h-4" />
+                          Live Demo
+                        </a>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

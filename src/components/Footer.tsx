@@ -77,9 +77,8 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="mt-10 pt-6 border-t border-gray-200/50 dark:border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-sm text-gray-500 dark:text-gray-500 flex items-center gap-1">
-            &copy; {currentYear} {personalInfo.name}. Built with{" "}
-            <HiHeart className="w-4 h-4 text-red-500 inline" /> using Next.js &
-            Tailwind CSS.
+            &copy; {currentYear} {personalInfo.name}.
+             All rights reserved
           </p>
           <p className="text-xs text-gray-400 dark:text-gray-600">
             Designed & Developed by Kanhaiya Prajapati

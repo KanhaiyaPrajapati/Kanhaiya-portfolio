@@ -62,17 +62,22 @@ export default function Contact() {
     e.preventDefault();
     setStatus("sending");
 
-    // EmailJS integration placeholder
-    // Replace with your EmailJS service ID, template ID, and public key
-    // import emailjs from '@emailjs/browser';
-    // await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', formData, 'YOUR_PUBLIC_KEY');
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
-    // Simulate send
-    setTimeout(() => {
+      if (!res.ok) throw new Error("Failed to send");
+
       setStatus("sent");
       setFormData({ name: "", email: "", message: "" });
       setTimeout(() => setStatus("idle"), 3000);
-    }, 1000);
+    } catch {
+      setStatus("error");
+      setTimeout(() => setStatus("idle"), 3000);
+    }
   };
 
   return (

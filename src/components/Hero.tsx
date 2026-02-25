@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { motion } from "framer-motion";
 import { HiDownload, HiArrowRight } from "react-icons/hi";
 import { FaLinkedinIn, FaGithub } from "react-icons/fa";
@@ -91,11 +92,17 @@ export default function Hero() {
             rel="noopener noreferrer"
             className="relative inline-block cursor-pointer group"
           >
-            <div className="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 p-1 mx-auto animate-pulse-glow group-hover:shadow-xl group-hover:shadow-primary-500/40 transition-shadow duration-300">
-              <div className="w-full h-full rounded-full bg-gray-200 dark:bg-dark-100 flex items-center justify-center overflow-hidden">
-                <span className="text-4xl md:text-5xl font-bold gradient-text">
-                  KP
-                </span>
+            <div className="w-36 h-36 md:w-44 md:h-44 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 p-1 mx-auto animate-pulse-glow group-hover:shadow-xl group-hover:shadow-primary-500/40 transition-shadow duration-300">
+              <div className="relative w-full h-full rounded-full overflow-hidden">
+                <Image
+                  src="/profile.png"
+                  alt={personalInfo.name}
+                  fill
+                  sizes="(max-width: 768px) 144px, 176px"
+                  priority
+                  quality={95}
+                  className="object-cover object-top"
+                />
               </div>
             </div>
             {/* Decorative ring */}

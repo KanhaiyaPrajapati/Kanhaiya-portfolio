@@ -54,7 +54,7 @@ export default function Navbar() {
         className={cn(
           "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
           scrolled
-            ? "glass shadow-lg shadow-black/5 dark:shadow-black/20"
+            ? "bg-white/70 dark:bg-dark-100/70 backdrop-blur-xl shadow-lg shadow-black/5 dark:shadow-black/20 border-b border-gray-200/30 dark:border-white/5"
             : "bg-transparent"
         )}
       >

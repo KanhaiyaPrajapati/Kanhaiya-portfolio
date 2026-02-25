@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 
 @layer base {
   html {
@@ -150,5 +149,96 @@
   }
   66% {
     transform: translate(25px, -40px) scale(0.85);
+  }
+}
+
+/* ===== Preloader Animations ===== */
+.preloader-spin {
+  animation: preloaderSpin 2.5s linear infinite;
+}
+
+.preloader-spin-reverse {
+  animation: preloaderSpin 4s linear infinite reverse;
+}
+
+.preloader-arc {
+  animation: preloaderArc 1.8s ease-in-out infinite;
+}
+
+.preloader-progress {
+  animation: preloaderProgress 2s ease-in-out infinite;
+}
+
+.preloader-text-glow {
+  animation: preloaderTextGlow 2s ease-in-out infinite;
+}
+
+.preloader-text-fade {
+  animation: preloaderTextFade 2s ease-in-out infinite;
+}
+
+.preloader-exit {
+  opacity: 0 !important;
+  transform: scale(1.08);
+  transition: opacity 0.7s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes preloaderSpin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes preloaderArc {
+  0% {
+    stroke-dasharray: 20 320;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 180 160;
+    stroke-dashoffset: -60;
+  }
+  100% {
+    stroke-dasharray: 20 320;
+    stroke-dashoffset: -280;
+  }
+}
+
+@keyframes preloaderProgress {
+  0% {
+    width: 0%;
+    margin-left: 0;
+  }
+  50% {
+    width: 100%;
+    margin-left: 0;
+  }
+  100% {
+    width: 0%;
+    margin-left: 100%;
+  }
+}
+
+@keyframes preloaderTextGlow {
+  0%,
+  100% {
+    filter: brightness(1) drop-shadow(0 0 4px rgba(99, 102, 241, 0.3));
+  }
+  50% {
+    filter: brightness(1.2) drop-shadow(0 0 12px rgba(99, 102, 241, 0.6));
+  }
+}
+
+@keyframes preloaderTextFade {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
   }
 }
