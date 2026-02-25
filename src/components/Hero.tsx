@@ -137,14 +137,14 @@ export default function Hero() {
         </motion.p>
 
         {/* CTA Buttons */}
-        {/* <motion.div
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.5 }}
           className="flex flex-wrap items-center justify-center gap-4 mb-12"
         >
           <a
-            href="/resume.pdf"
+            href="/Kanhaiya_frontend_Enginner.pdf"
             download
             className="btn-primary"
           >
@@ -162,7 +162,7 @@ export default function Hero() {
             View Projects
             <HiArrowRight className="w-5 h-5" />
           </a>
-        </motion.div> */}
+        </motion.div>
 
         {/* Social links */}
         <motion.div

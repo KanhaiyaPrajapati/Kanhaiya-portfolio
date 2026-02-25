@@ -79,7 +79,7 @@ export const projects = [
       "Application tracking dashboard",
     ],
     github: "https://github.com/kanhaiya-prajapati/jobvob-app",
-    live: "#",
+    live: "https://play.google.com/store/apps/details?id=cnxt.com.jobvob&pcampaignid=web_share",
     image: "/projects/jobvob.png",
     category: "Mobile App",
   },
@@ -102,7 +102,7 @@ export const projects = [
     category: "Web App",
   },
   {
-    title: "IT Futurz Admin Panel",
+    title: "IT Futurz",
     description:
       "Feature-rich admin dashboard built with Next.js and Material UI, featuring server-side rendering for optimal performance and SEO.",
     longDescription:
@@ -115,7 +115,7 @@ export const projects = [
       "Responsive dashboard layout",
     ],
     github: "https://github.com/kanhaiya-prajapati/it-futurz-admin",
-    live: "#",
+    live: "https://itfuturz.in/#/home",
     image: "/projects/itfuturz.png",
     category: "Web App",
   },
