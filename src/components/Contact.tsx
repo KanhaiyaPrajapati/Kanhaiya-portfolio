@@ -1,12 +1,14 @@
 "use client";
 
 import { useState, FormEvent } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   HiOutlineMail,
   HiOutlinePhone,
   HiOutlineLocationMarker,
   HiPaperAirplane,
+  HiCheckCircle,
+  HiExclamationCircle,
 } from "react-icons/hi";
 import { FaLinkedinIn, FaGithub } from "react-icons/fa";
 import SectionHeading from "./SectionHeading";
@@ -57,10 +59,12 @@ const socialLinks = [
 export default function Contact() {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setStatus("sending");
+    setErrorMsg("");
 
     try {
       const res = await fetch("/api/contact", {
@@ -69,14 +73,21 @@ export default function Contact() {
         body: JSON.stringify(formData),
       });
 
-      if (!res.ok) throw new Error("Failed to send");
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        throw new Error(data.error || "Something went wrong. Please try again.");
+      }
 
       setStatus("sent");
       setFormData({ name: "", email: "", message: "" });
-      setTimeout(() => setStatus("idle"), 3000);
-    } catch {
+      setTimeout(() => setStatus("idle"), 4000);
+    } catch (err) {
+      setErrorMsg(
+        err instanceof Error ? err.message : "Something went wrong. Please try again."
+      );
       setStatus("error");
-      setTimeout(() => setStatus("idle"), 3000);
+      setTimeout(() => setStatus("idle"), 5000);
     }
   };
 
@@ -90,6 +101,7 @@ export default function Contact() {
 
       <div className="section-container relative">
         <SectionHeading
+          eyebrow="05 · Contact"
           title="Get In Touch"
           subtitle="Have a project in mind or want to collaborate? Let's connect!"
         />
@@ -257,8 +269,36 @@ export default function Contact() {
                   </>
                 )}
                 {status === "sent" && <>Message Sent!</>}
-                {status === "error" && <>Error — Try Again</>}
+                {status === "error" && <>Try Again</>}
               </motion.button>
+
+              {/* Inline feedback banner */}
+              <AnimatePresence mode="wait">
+                {status === "sent" && (
+                  <motion.p
+                    key="sent"
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    className="flex items-center gap-2 text-sm text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-500/10 rounded-xl px-4 py-3"
+                  >
+                    <HiCheckCircle className="w-5 h-5 shrink-0" />
+                    Thanks! Your message is on its way. I&apos;ll reply soon.
+                  </motion.p>
+                )}
+                {status === "error" && (
+                  <motion.p
+                    key="error"
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-500/10 rounded-xl px-4 py-3"
+                  >
+                    <HiExclamationCircle className="w-5 h-5 shrink-0" />
+                    {errorMsg || "Something went wrong. Please try again."}
+                  </motion.p>
+                )}
+              </AnimatePresence>
             </form>
           </motion.div>
         </div>

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { HiExternalLink, HiCode, HiArrowRight } from "react-icons/hi";
 import { FaGithub } from "react-icons/fa";
 import SectionHeading from "./SectionHeading";
+import TiltCard from "./TiltCard";
 import { projects } from "@/lib/data";
 import { cn } from "@/lib/utils";
 
@@ -19,6 +20,7 @@ export default function Projects() {
     <section id="projects" className="section-padding relative">
       <div className="section-container">
         <SectionHeading
+          eyebrow="03 · Work"
           title="Projects"
           subtitle="A collection of projects that showcase my skills and experience"
         />
@@ -69,7 +71,9 @@ export default function Projects() {
                   >
                     {/* Visual / Image side */}
                     <div className={cn("order-1", !isEven && "lg:order-2")}>
-                      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-primary-500/10 via-accent-500/5 to-primary-400/10 dark:from-primary-500/5 dark:via-accent-500/[0.03] dark:to-primary-400/5 border border-gray-200/40 dark:border-white/5 aspect-[16/10] group-hover:shadow-2xl group-hover:shadow-primary-500/10 transition-all duration-700">
+                      <TiltCard
+                        intensity={8}
+                        className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-primary-500/10 via-accent-500/5 to-primary-400/10 dark:from-primary-500/5 dark:via-accent-500/[0.03] dark:to-primary-400/5 border border-gray-200/40 dark:border-white/5 aspect-[16/10] group-hover:shadow-2xl group-hover:shadow-primary-500/10 transition-all duration-700">
                         {/* Grid dots pattern */}
                         <div className="absolute inset-0 opacity-[0.04] dark:opacity-[0.06]">
                           <div
@@ -124,7 +128,7 @@ export default function Projects() {
                             Live Demo
                           </motion.a>
                         </div>
-                      </div>
+                      </TiltCard>
                     </div>
 
                     {/* Content side */}

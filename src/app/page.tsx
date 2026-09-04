@@ -2,6 +2,8 @@ import dynamic from "next/dynamic";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import Preloader from "@/components/Preloader";
+import ScrollProgress from "@/components/ScrollProgress";
+import BackToTop from "@/components/BackToTop";
 
 const About = dynamic(() => import("@/components/About"));
 const Experience = dynamic(() => import("@/components/Experience"));
@@ -14,6 +16,8 @@ export default function Home() {
   return (
     <>
       <Preloader />
+      <ScrollProgress />
+      <BackToTop />
       <Navbar />
       <main>
         <Hero />

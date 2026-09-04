@@ -95,26 +95,49 @@ export default function Skills() {
 
       <div className="section-container relative">
         <SectionHeading
+          eyebrow="04 · Skills"
           title="Skills & Technologies"
           subtitle="Technologies I work with to bring ideas to life"
         />
 
         {/* Category tabs */}
         <div className="flex flex-wrap justify-center gap-2 mb-12">
-          {skillCategories.map((cat, i) => (
-            <button
-              key={cat.title}
-              onClick={() => setActiveCategory(i)}
-              className={cn(
-                "px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300",
-                activeCategory === i
-                  ? "bg-gradient-to-r from-primary-500 to-accent-500 text-white shadow-lg shadow-primary-500/25"
-                  : "bg-white dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200/50 dark:border-white/5"
-              )}
-            >
-              {cat.title}
-            </button>
-          ))}
+          {skillCategories.map((cat, i) => {
+            const isActive = activeCategory === i;
+            return (
+              <button
+                key={cat.title}
+                onClick={() => setActiveCategory(i)}
+                className={cn(
+                  "relative px-4 py-2 rounded-xl text-sm font-medium transition-colors duration-300",
+                  isActive
+                    ? "text-white"
+                    : "bg-white dark:bg-white/5 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-white/10 border border-gray-200/50 dark:border-white/5"
+                )}
+              >
+                {isActive && (
+                  <motion.span
+                    layoutId="skill-tab-pill"
+                    transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                    className="absolute inset-0 rounded-xl bg-gradient-to-r from-primary-500 to-accent-500 shadow-lg shadow-primary-500/25"
+                  />
+                )}
+                <span className="relative z-10 flex items-center gap-2">
+                  {cat.title}
+                  <span
+                    className={cn(
+                      "text-[10px] font-bold px-1.5 py-0.5 rounded-full transition-colors",
+                      isActive
+                        ? "bg-white/25 text-white"
+                        : "bg-gray-100 dark:bg-white/10 text-gray-500 dark:text-gray-400"
+                    )}
+                  >
+                    {cat.skills.length}
+                  </span>
+                </span>
+              </button>
+            );
+          })}
         </div>
 
         {/* Skills grid - show active category */}

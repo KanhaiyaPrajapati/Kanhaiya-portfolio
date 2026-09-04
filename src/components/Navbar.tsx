@@ -18,25 +18,40 @@ export default function Navbar() {
     setMounted(true);
   }, []);
 
+  // Navbar background toggle on scroll (lightweight listener).
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-
-      const sections = navLinks.map((link) => link.href.replace("#", ""));
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const el = document.getElementById(sections[i]);
-        if (el) {
-          const rect = el.getBoundingClientRect();
-          if (rect.top <= 150) {
-            setActiveSection(sections[i]);
-            break;
-          }
-        }
-      }
-    };
-
+    const handleScroll = () => setScrolled(window.scrollY > 50);
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Scroll-spy via IntersectionObserver — smoother and cheaper than reading
+  // getBoundingClientRect on every scroll frame.
+  useEffect(() => {
+    const sections = navLinks
+      .map((link) => document.getElementById(link.href.replace("#", "")))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (sections.length === 0) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Pick the entry closest to the top that is intersecting.
+        const visible = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible[0]) setActiveSection(visible[0].target.id);
+      },
+      {
+        // Trigger when a section's upper portion crosses the viewport middle.
+        rootMargin: "-45% 0px -45% 0px",
+        threshold: 0,
+      }
+    );
+
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
   }, []);
 
   const handleNavClick = (href: string) => {
@@ -80,24 +95,34 @@ export default function Navbar() {
 
             {/* Desktop Links */}
             <div className="hidden md:flex items-center gap-1">
-              {navLinks.map((link) => (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleNavClick(link.href);
-                  }}
-                  className={cn(
-                    "px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200",
-                    activeSection === link.href.replace("#", "")
-                      ? "text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-500/10"
-                      : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5"
-                  )}
-                >
-                  {link.name}
-                </a>
-              ))}
+              {navLinks.map((link) => {
+                const isActive = activeSection === link.href.replace("#", "");
+                return (
+                  <a
+                    key={link.name}
+                    href={link.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavClick(link.href);
+                    }}
+                    className={cn(
+                      "relative px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200",
+                      isActive
+                        ? "text-primary-600 dark:text-primary-400"
+                        : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
+                    )}
+                  >
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-pill"
+                        transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        className="absolute inset-0 rounded-lg bg-primary-50 dark:bg-primary-500/10"
+                      />
+                    )}
+                    <span className="relative z-10">{link.name}</span>
+                  </a>
+                );
+              })}
             </div>
 
             {/* Right side */}

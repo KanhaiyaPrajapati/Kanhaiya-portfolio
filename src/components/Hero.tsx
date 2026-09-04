@@ -6,6 +6,7 @@ import { HiDownload, HiArrowRight } from "react-icons/hi";
 import { FaLinkedinIn, FaGithub } from "react-icons/fa";
 import { HiOutlineMail } from "react-icons/hi";
 import { personalInfo } from "@/lib/data";
+import MagneticButton from "./MagneticButton";
 
 const PARTICLES = [
   { id: 0, size: 4.2, x: 12, y: 8, duration: 5.1, delay: 0.3 },
@@ -151,17 +152,17 @@ export default function Hero() {
           transition={{ duration: 0.5, delay: 0.5 }}
           className="flex flex-wrap items-center justify-center gap-4 mb-12"
         >
-          <a
+          <MagneticButton
             href="/Kanhaiya_Frontend_Engineer.pdf"
             download="Kanhaiya_Prajapati_Frontend_Engineer.pdf"
             className="btn-primary"
           >
             <HiDownload className="w-5 h-5" />
             Download Resume
-          </a>
-          <a
+          </MagneticButton>
+          <MagneticButton
             href="#projects"
-            onClick={(e) => {
+            onClick={(e: React.MouseEvent) => {
               e.preventDefault();
               document.querySelector("#projects")?.scrollIntoView({ behavior: "smooth" });
             }}
@@ -169,7 +170,7 @@ export default function Hero() {
           >
             View Projects
             <HiArrowRight className="w-5 h-5" />
-          </a>
+          </MagneticButton>
         </motion.div>
 
         {/* Social links */}

@@ -12,13 +12,32 @@ export async function POST(req: Request) {
       );
     }
 
+    // Guard: make missing credentials an obvious, actionable error instead of a
+    // cryptic SMTP failure. This is the #1 cause of the 500 (server not restarted
+    // after editing .env.local, so these are undefined at runtime).
+    if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+      console.error(
+        "Contact form: EMAIL_USER or EMAIL_PASS is not set. " +
+          "Check .env.local and restart the dev server."
+      );
+      return NextResponse.json(
+        { error: "Email service is not configured on the server." },
+        { status: 500 }
+      );
+    }
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
         user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
+        // Gmail shows App Passwords with spaces for readability, but the real
+        // password has none. Strip them so either format works.
+        pass: process.env.EMAIL_PASS.replace(/\s+/g, ""),
       },
     });
+
+    // Verify the SMTP connection/credentials up front so failures are explicit.
+    await transporter.verify();
 
     // Email to you — notification about new contact
     await transporter.sendMail({
@@ -82,8 +101,14 @@ export async function POST(req: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Contact form error:", error);
+    const detail =
+      error instanceof Error ? error.message : "Unknown error";
     return NextResponse.json(
-      { error: "Failed to send message" },
+      {
+        error: "Failed to send message",
+        // Only expose the underlying cause outside production to aid debugging.
+        ...(process.env.NODE_ENV !== "production" ? { detail } : {}),
+      },
       { status: 500 }
     );
   }

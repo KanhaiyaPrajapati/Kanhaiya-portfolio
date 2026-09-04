@@ -52,16 +52,57 @@ export const education = {
 
 export const experience = [
   {
-    role: "React.js Developer / Frontend Developer",
-    company: "Koli Infotech Pvt. Ltd.",
-    location: "Surat, Gujarat",
-    duration: "Jan 2024 - Present",
+    role: "Frontend Engineer — RubiQRide (Ride-Sharing Platform)",
+    company: "Ride-Sharing Platform · Driver & Passenger Apps",
+    location: "Pune, Maharashtra",
+    duration: "June 2026 - Present",
+    current: true,
     achievements: [
-      "Designed and developed responsive web applications and admin dashboards using React.js, Next.js, and Material UI, delivering seamless user experiences across devices.",
-      "Built reusable, maintainable UI components leveraging React Hooks and integrated RESTful APIs for dynamic data rendering.",
-      "Developed cross-platform mobile applications with React Native, implementing Redux for state management and React Navigation for routing.",
-      "Collaborated closely with backend engineers working on Node.js/MongoDB in Agile sprints, ensuring efficient feature delivery and code quality.",
+      "Architected and built a live, full-scale ride-sharing platform engineered to handle 10,000+ concurrent rides, delivering separate Driver and Passenger React Native apps from scratch.",
+      "Implemented real-time GPS tracking with Socket.IO at under 100ms latency and a live driver heatmap that clusters 500+ active drivers for efficient ride matching.",
+      "Integrated Razorpay payments (UPI, cards, wallets), Twilio OTP authentication with a 3-layer fallback, and Firebase push notifications for ride and trip updates.",
+      "Managed complex application state with Redux Toolkit and optimized rendering to keep the apps responsive on low-end Android devices.",
     ],
+    tech: ["React Native", "TypeScript", "Redux Toolkit", "Socket.IO", "Google Maps", "Razorpay", "Firebase"],
+  },
+  {
+    role: "Full Stack Developer — Yara International",
+    company: "Enterprise Digital Farming Platform",
+    location: "Remote",
+    duration: "February 2026 - July 2026",
+    current: false,
+    achievements: [
+      "Delivered production support and feature work for an enterprise, international-scale digital farming platform used by farmers and agronomists across multiple regions.",
+      "Investigated and resolved end-user production issues through Jira, performing end-to-end debugging across the React frontend and Node.js backend to fix critical defects quickly.",
+      "Conducted root cause analysis and shipped long-term fixes that reduced recurring incidents and improved overall platform stability and reliability in a live environment.",
+    ],
+    tech: ["React.js", "React Native", "Next.js", "Node.js", "Express.js", "MySQL", "MongoDB"],
+  },
+  {
+    role: "Frontend Developer — IMS (Exam Prep Portal)",
+    company: "Government Exam Preparation Portal",
+    location: "Surat, Gujarat",
+    duration: "January 2025 - May 2025",
+    current: false,
+    achievements: [
+      "Built a live exam-preparation web portal helping students prepare for competitive government exams (RRB NTPC, GUJCET) with structured courses, mock tests, and performance analytics.",
+      "Developed dynamic React.js interfaces with reusable components, an admin panel for content management, and student progress tracking.",
+      "Integrated REST APIs with the Node.js backend for dynamic content delivery and real-time result tracking.",
+    ],
+    tech: ["React.js", "Node.js", "REST APIs", "Git"],
+  },
+  {
+    role: "React Native Developer — JobVob",
+    company: "Job Search Mobile Application",
+    location: "Surat, Gujarat",
+    duration: "June 2024 - December 2024",
+    current: false,
+    achievements: [
+      "Developed a full-featured job-search mobile app with user authentication, job listing feeds, advanced filters, and an application-tracking dashboard for candidates.",
+      "Implemented push notifications for new job opportunities to keep candidates engaged.",
+      "Managed global state with Redux and designed reusable components for a smooth, performance-focused mobile UX.",
+    ],
+    tech: ["React Native", "JavaScript", "Redux", "REST APIs"],
   },
 ];
 

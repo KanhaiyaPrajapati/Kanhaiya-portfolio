@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { HiLocationMarker, HiAcademicCap, HiCode, HiBriefcase } from "react-icons/hi";
 import { FaCertificate } from "react-icons/fa";
 import SectionHeading from "./SectionHeading";
+import TiltCard from "./TiltCard";
 import { personalInfo, education, certifications } from "@/lib/data";
 
 const infoCards = [
@@ -51,6 +52,7 @@ export default function About() {
     <section id="about" className="section-padding relative">
       <div className="section-container">
         <SectionHeading
+          eyebrow="01 · About"
           title="About Me"
           subtitle="Get to know more about my background and what drives me"
         />
@@ -79,12 +81,11 @@ export default function About() {
               className="grid sm:grid-cols-2 gap-4"
             >
               {infoCards.map((card) => (
-                <motion.div
-                  key={card.label}
-                  variants={item}
-                  whileHover={{ y: -4, scale: 1.02 }}
-                  className="glass-card p-5 group cursor-default"
-                >
+                <motion.div key={card.label} variants={item}>
+                  <TiltCard
+                    intensity={7}
+                    className="glass-card p-5 group cursor-default h-full"
+                  >
                   <div className="flex items-start gap-4">
                     <div className="w-10 h-10 rounded-xl bg-primary-50 dark:bg-primary-500/10 flex items-center justify-center shrink-0 group-hover:bg-primary-100 dark:group-hover:bg-primary-500/20 transition-colors">
                       <card.icon className="w-5 h-5 text-primary-500" />
@@ -101,6 +102,7 @@ export default function About() {
                       </p>
                     </div>
                   </div>
+                  </TiltCard>
                 </motion.div>
               ))}
             </motion.div>
