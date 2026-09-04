@@ -1,6 +1,197 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
+/** Escape HTML so user input can't break layout or inject markup into emails. */
+function escapeHtml(value: string): string {
+  return value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+const BRAND = {
+  name: "Kanhaiya Prajapati",
+  role: "Frontend Engineer",
+  email: "kanhaiyaprajapati756@gmail.com",
+  github: "https://github.com/KanhaiyaPrajapati",
+  linkedin: "https://www.linkedin.com/in/kanhaiya-prajapati-a59b7a157/",
+  portfolio: "https://kanhaiya-portfolio.vercel.app",
+  primary: "#6366f1",
+  accent: "#8b5cf6",
+};
+
+/**
+ * Notification email sent to the site owner when someone submits the form.
+ * Uses a table-based, light-themed layout for reliable rendering across
+ * Gmail, Outlook, and Apple Mail.
+ */
+function ownerNotificationTemplate(name: string, email: string, message: string) {
+  const initial = name.trim().charAt(0).toUpperCase() || "?";
+  const sentAt = new Date().toLocaleString("en-IN", {
+    dateStyle: "medium",
+    timeStyle: "short",
+    timeZone: "Asia/Kolkata",
+  });
+
+  return `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <title>New Portfolio Inquiry</title>
+  </head>
+  <body style="margin:0;padding:0;background-color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f1f5f9;padding:32px 12px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(15,23,42,0.08);">
+            <!-- Header -->
+            <tr>
+              <td style="background:linear-gradient(135deg,${BRAND.primary},${BRAND.accent});padding:36px 40px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td>
+                      <p style="margin:0 0 6px;color:rgba(255,255,255,0.75);font-size:12px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;">New Inquiry</p>
+                      <h1 style="margin:0;color:#ffffff;font-size:24px;font-weight:700;">You have a new message</h1>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Sender identity -->
+            <tr>
+              <td style="padding:32px 40px 8px;">
+                <table role="presentation" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td style="vertical-align:middle;padding-right:16px;">
+                      <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,${BRAND.primary},${BRAND.accent});color:#ffffff;font-size:22px;font-weight:700;line-height:52px;text-align:center;">${initial}</div>
+                    </td>
+                    <td style="vertical-align:middle;">
+                      <p style="margin:0;color:#0f172a;font-size:18px;font-weight:700;">${name}</p>
+                      <a href="mailto:${email}" style="color:${BRAND.primary};font-size:14px;text-decoration:none;">${email}</a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Message -->
+            <tr>
+              <td style="padding:20px 40px 8px;">
+                <p style="margin:0 0 8px;color:#64748b;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;">Message</p>
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f8fafc;border:1px solid #e2e8f0;border-left:4px solid ${BRAND.primary};border-radius:10px;">
+                  <tr>
+                    <td style="padding:18px 20px;">
+                      <p style="margin:0;color:#334155;font-size:15px;line-height:1.7;white-space:pre-wrap;">${message}</p>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- CTA -->
+            <tr>
+              <td style="padding:24px 40px 32px;" align="center">
+                <a href="mailto:${email}?subject=Re:%20Your%20message%20via%20portfolio" style="display:inline-block;background:linear-gradient(135deg,${BRAND.primary},${BRAND.accent});color:#ffffff;padding:13px 34px;border-radius:10px;font-size:15px;font-weight:600;text-decoration:none;">Reply to ${name}</a>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="padding:20px 40px;background-color:#f8fafc;border-top:1px solid #e2e8f0;" align="center">
+                <p style="margin:0;color:#94a3b8;font-size:12px;">Received ${sentAt} IST &middot; via your portfolio contact form</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+  </html>`;
+}
+
+/** Auto-reply sent back to the person who submitted the form. */
+function autoReplyTemplate(name: string) {
+  return `
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light" />
+    <title>Thanks for reaching out</title>
+  </head>
+  <body style="margin:0;padding:0;background-color:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f1f5f9;padding:32px 12px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(15,23,42,0.08);">
+            <!-- Header -->
+            <tr>
+              <td style="background:linear-gradient(135deg,${BRAND.primary},${BRAND.accent});padding:40px;" align="center">
+                <div style="width:64px;height:64px;border-radius:50%;background-color:rgba(255,255,255,0.15);color:#ffffff;font-size:28px;font-weight:700;line-height:64px;text-align:center;margin:0 auto 14px;">KP</div>
+                <h1 style="margin:0;color:#ffffff;font-size:24px;font-weight:700;">Thanks for reaching out!</h1>
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding:36px 40px 16px;">
+                <p style="margin:0 0 16px;color:#0f172a;font-size:16px;line-height:1.7;">Hi ${name},</p>
+                <p style="margin:0 0 16px;color:#475569;font-size:15px;line-height:1.7;">Thank you for getting in touch. I've received your message and will get back to you within 1&ndash;2 business days.</p>
+                <p style="margin:0 0 24px;color:#475569;font-size:15px;line-height:1.7;">In the meantime, feel free to explore my work and connect with me:</p>
+
+                <!-- Links -->
+                <table role="presentation" cellpadding="0" cellspacing="0" style="margin:0 auto 8px;">
+                  <tr>
+                    <td style="padding:0 6px;">
+                      <a href="${BRAND.portfolio}" style="display:inline-block;background-color:#f1f5f9;color:${BRAND.primary};padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">Portfolio</a>
+                    </td>
+                    <td style="padding:0 6px;">
+                      <a href="${BRAND.github}" style="display:inline-block;background-color:#f1f5f9;color:${BRAND.primary};padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">GitHub</a>
+                    </td>
+                    <td style="padding:0 6px;">
+                      <a href="${BRAND.linkedin}" style="display:inline-block;background-color:#f1f5f9;color:${BRAND.primary};padding:10px 20px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">LinkedIn</a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Signature -->
+            <tr>
+              <td style="padding:16px 40px 36px;">
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-top:1px solid #e2e8f0;">
+                  <tr>
+                    <td style="padding-top:24px;">
+                      <p style="margin:0;color:#0f172a;font-size:16px;font-weight:700;">${BRAND.name}</p>
+                      <p style="margin:2px 0 0;color:${BRAND.primary};font-size:13px;font-weight:600;">${BRAND.role}</p>
+                      <a href="mailto:${BRAND.email}" style="color:#94a3b8;font-size:13px;text-decoration:none;">${BRAND.email}</a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="padding:18px 40px;background-color:#f8fafc;border-top:1px solid #e2e8f0;" align="center">
+                <p style="margin:0;color:#94a3b8;font-size:12px;">This is an automated confirmation &middot; Please don't reply to this email.</p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+  </html>`;
+}
+
 export async function POST(req: Request) {
   try {
     const { name, email, message } = await req.json();
@@ -39,63 +230,26 @@ export async function POST(req: Request) {
     // Verify the SMTP connection/credentials up front so failures are explicit.
     await transporter.verify();
 
-    // Email to you — notification about new contact
+    // Sanitize user input before embedding it in HTML emails.
+    const safeName = escapeHtml(String(name).trim());
+    const safeEmail = escapeHtml(String(email).trim());
+    const safeMessage = escapeHtml(String(message).trim());
+
+    // Notification email to the site owner.
     await transporter.sendMail({
       from: `"Portfolio Contact" <${process.env.EMAIL_USER}>`,
       to: process.env.EMAIL_USER,
       replyTo: email,
-      subject: `New Portfolio Inquiry from ${name}`,
-      html: `
-        <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0f0f23; border-radius: 16px; overflow: hidden;">
-          <div style="background: linear-gradient(135deg, #6366f1, #a855f7); padding: 32px; text-align: center;">
-            <h1 style="color: #fff; margin: 0; font-size: 24px; font-weight: 700;">New Contact Message</h1>
-            <p style="color: rgba(255,255,255,0.85); margin: 8px 0 0; font-size: 14px;">Someone reached out via your portfolio</p>
-          </div>
-          <div style="padding: 32px;">
-            <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
-              <p style="color: #a5b4fc; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 4px;">Name</p>
-              <p style="color: #fff; font-size: 16px; font-weight: 600; margin: 0;">${name}</p>
-            </div>
-            <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
-              <p style="color: #a5b4fc; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 4px;">Email</p>
-              <a href="mailto:${email}" style="color: #818cf8; font-size: 16px; font-weight: 600; text-decoration: none;">${email}</a>
-            </div>
-            <div style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 20px;">
-              <p style="color: #a5b4fc; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin: 0 0 8px;">Message</p>
-              <p style="color: #e2e8f0; font-size: 15px; line-height: 1.7; margin: 0; white-space: pre-wrap;">${message}</p>
-            </div>
-            <div style="margin-top: 24px; text-align: center;">
-              <a href="mailto:${email}" style="display: inline-block; background: linear-gradient(135deg, #6366f1, #a855f7); color: #fff; padding: 12px 28px; border-radius: 10px; font-size: 14px; font-weight: 600; text-decoration: none;">Reply to ${name}</a>
-            </div>
-          </div>
-          <div style="padding: 16px 32px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05);">
-            <p style="color: rgba(255,255,255,0.3); font-size: 12px; margin: 0;">Sent from your portfolio contact form</p>
-          </div>
-        </div>
-      `,
+      subject: `New portfolio inquiry from ${safeName}`,
+      html: ownerNotificationTemplate(safeName, safeEmail, safeMessage),
     });
 
-    // Auto-reply to the sender
+    // Auto-reply confirmation to the sender.
     await transporter.sendMail({
-      from: `"Kanhaiya Prajapati" <${process.env.EMAIL_USER}>`,
+      from: `"${BRAND.name}" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: `Thanks for reaching out, ${name}!`,
-      html: `
-        <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #0f0f23; border-radius: 16px; overflow: hidden;">
-          <div style="background: linear-gradient(135deg, #6366f1, #a855f7); padding: 32px; text-align: center;">
-            <h1 style="color: #fff; margin: 0; font-size: 24px; font-weight: 700;">Thank You!</h1>
-          </div>
-          <div style="padding: 32px;">
-            <p style="color: #e2e8f0; font-size: 16px; line-height: 1.7; margin: 0 0 16px;">Hi ${name},</p>
-            <p style="color: #cbd5e1; font-size: 15px; line-height: 1.7; margin: 0 0 16px;">Thank you for reaching out! I've received your message and will get back to you as soon as possible.</p>
-            <p style="color: #cbd5e1; font-size: 15px; line-height: 1.7; margin: 0 0 24px;">In the meantime, feel free to check out my work on <a href="https://github.com/KanhaiyaPrajapati" style="color: #818cf8; text-decoration: none;">GitHub</a> or connect on <a href="https://www.linkedin.com/in/kanhaiya-prajapati-a59b7a157/" style="color: #818cf8; text-decoration: none;">LinkedIn</a>.</p>
-            <p style="color: #e2e8f0; font-size: 15px; margin: 0;">Best regards,<br><strong style="color: #a5b4fc;">Kanhaiya Prajapati</strong><br><span style="color: #94a3b8; font-size: 13px;">Frontend Engineer</span></p>
-          </div>
-          <div style="padding: 16px 32px; text-align: center; border-top: 1px solid rgba(255,255,255,0.05);">
-            <p style="color: rgba(255,255,255,0.3); font-size: 12px; margin: 0;">kanhaiyaprajapati756@gmail.com</p>
-          </div>
-        </div>
-      `,
+      subject: `Thanks for reaching out, ${safeName}!`,
+      html: autoReplyTemplate(safeName),
     });
 
     return NextResponse.json({ success: true });
