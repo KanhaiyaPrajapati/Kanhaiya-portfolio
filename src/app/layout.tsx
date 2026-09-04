@@ -16,7 +16,7 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata: Metadata = {
   title: "Kanhaiya Prajapati | Frontend Engineer",
   description:
-    "Portfolio of Kanhaiya Prajapati — Frontend Engineer specializing in React.js, Next.js, React Native, and modern web technologies. Based in Surat, Gujarat.",
+    "Portfolio of Kanhaiya Prajapati — Frontend Engineer specializing in React.js, Next.js, React Native, and modern web technologies. Based in Pune, Maharashtra.",
   keywords: [
     "Frontend Engineer",
     "React.js Developer",
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     "React Native",
     "Kanhaiya Prajapati",
     "Web Developer",
-    "Surat",
+    "Pune",
     "Portfolio",
   ],
   authors: [{ name: "Kanhaiya Prajapati" }],

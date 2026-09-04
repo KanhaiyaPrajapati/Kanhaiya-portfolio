@@ -30,15 +30,16 @@ export const personalInfo = {
   tagline: "Building responsive UIs and Apps with React, Next.js & React Native",
   email: "kanhaiyaprajapati756@gmail.com",
   phone: "+91 8849931533",
-  location: "Surat, Gujarat, India",
+  location: "Pune, Maharashtra, India",
   origin: "Surat, Gujarat",
   linkedin: "https://www.linkedin.com/in/kanhaiya-prajapati-a59b7a157/",
   github: "https://github.com/KanhaiyaPrajapati",
-  bio: `I'm a passionate Frontend Engineer based in Surat, specializing in crafting
-    pixel-perfect, responsive web applications. With expertise in React.js, Next.js, React Native and
+  bio: `I'm a passionate Frontend Engineer based in Pune with 3 years of experience building
+    responsive, scalable web and mobile applications. With expertise in React.js, Next.js, React Native and
     the modern JavaScript ecosystem, I transform complex requirements into elegant,
-    performant user interfaces. I thrive in Agile environments, collaborating closely with
-    cross-functional teams to deliver exceptional digital experiences.`,
+    performant user interfaces. I've delivered live production apps serving thousands of users, and I
+    thrive in Agile environments, collaborating closely with cross-functional teams to deliver
+    exceptional digital experiences.`,
 };
 
 export const education = {
@@ -118,6 +119,24 @@ export const projects = [
     live: "https://itfuturz.in/#/home",
     image: "/projects/itfuturz.png",
     category: "Web App",
+  },
+  {
+    title: "Yara International",
+    description:
+      "Enterprise, international-scale digital farming platform used by farmers and agronomists across multiple regions.",
+    longDescription:
+      "Delivered production support and feature work for an enterprise digital farming platform. Investigated and resolved end-user production issues via Jira, performing end-to-end debugging across the React frontend and Node.js backend, and shipped long-term fixes that improved platform stability.",
+    tech: ["React.js", "React Native", "Next.js", "Node.js", "Express.js", "MySQL", "MongoDB"],
+    features: [
+      "End-to-end production debugging",
+      "Root cause analysis & long-term fixes",
+      "Full-stack React + Node.js support",
+      "Jira-based issue resolution",
+    ],
+    github: "#",
+    live: "#",
+    image: "/projects/yara.png",
+    category: "Full Stack",
   },
   {
     title: "RubiQRide",

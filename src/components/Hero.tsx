@@ -95,13 +95,14 @@ export default function Hero() {
             <div className="w-36 h-36 md:w-44 md:h-44 rounded-full bg-gradient-to-br from-primary-500 to-accent-500 p-1 mx-auto animate-pulse-glow group-hover:shadow-xl group-hover:shadow-primary-500/40 transition-shadow duration-300">
               <div className="relative w-full h-full rounded-full overflow-hidden">
                 <Image
-                  src="/profile.png"
+                  src="/profile.jpg"
                   alt={personalInfo.name}
                   fill
                   sizes="(max-width: 768px) 144px, 176px"
                   priority
                   quality={95}
-                  className="object-cover object-top"
+                  className="object-cover"
+                  style={{ objectPosition: "center 20%" }}
                 />
               </div>
             </div>
@@ -151,8 +152,8 @@ export default function Hero() {
           className="flex flex-wrap items-center justify-center gap-4 mb-12"
         >
           <a
-            href="/Kanhaiya_frontend_Enginner.pdf"
-            download
+            href="/Kanhaiya_Frontend_Engineer.pdf"
+            download="Kanhaiya_Prajapati_Frontend_Engineer.pdf"
             className="btn-primary"
           >
             <HiDownload className="w-5 h-5" />

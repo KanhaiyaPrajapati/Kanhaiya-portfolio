@@ -10,14 +10,14 @@ const infoCards = [
   {
     icon: HiLocationMarker,
     label: "Location",
-    value: "Surat, Gujarat",
+    value: "Pune, Maharashtra",
     detail: "Originally from Surat",
   },
   {
     icon: HiBriefcase,
     label: "Experience",
-    value: "Frontend Developer",
-    detail: "Koli Infotech Pvt. Ltd.",
+    value: "Frontend Engineer",
+    detail: "3 years of experience",
   },
   {
     icon: HiCode,
@@ -187,7 +187,7 @@ export default function About() {
                 {[
                   { label: "Projects", value: "6+" },
                   { label: "Technologies", value: "25+" },
-                  { label: "Experience", value: "2+ Year" },
+                  { label: "Experience", value: "3 Years" },
                   { label: "Methodologies", value: "Agile" },
                 ].map((stat) => (
                   <div key={stat.label} className="text-center">
